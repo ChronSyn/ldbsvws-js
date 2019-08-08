@@ -1,19 +1,18 @@
 {
-  "name": "ldbws-json",
-  "version": "1.0.3",
+  "name": "ldbsvws-js",
+  "version": "1.0.0",
   "engines": {
     "node": ">=7.6"
   },
   "description": "JSON Interface for the National Rail Enquiries Darwin OpenLDBWS SOAP service. Requires a valid token to access services.",
   "author": {
-    "name": "SpiralArm Consulting ltd",
-    "email": "srogers.uk@gmail.com"
+    "name": "ChronSyn"
   },
   "license": "MIT",
-  "homepage": "https://github.com/magnatronus/ldbws-json",
+  "homepage": "https://github.com/chronsyn/ldbsvws-js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/magnatronus/ldbws-json"
+    "url": "https://github.com/chronsyn/ldbsvws-js"
   },
   "main": "./build/index.js",
   "scripts": {
