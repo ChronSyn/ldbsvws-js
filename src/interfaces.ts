@@ -93,6 +93,7 @@ export interface IOpenLDBWS {
   accessToken: string;
   baseURL: string;
   staff: boolean;
+  enableDebug: boolean
   mapDelayCodeToReason: boolean;
   getDelayReason: (code: string | number) => string;
 }

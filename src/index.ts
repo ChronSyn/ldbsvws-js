@@ -19,11 +19,13 @@ class OpenLDBWS implements IOpenLDBWS {
   baseURL: string;
   staff: boolean = false;
   mapDelayCodeToReason: boolean = false;
+  enableDebug: boolean = false;
 
-  constructor({accessToken = "0000-0000-0000-0000", staff = false} : {accessToken: string, staff?: boolean}) {//baseURL = "https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb10.asmx") {
+  constructor({accessToken = "0000-0000-0000-0000", staff = false, enableDebug = false} : {accessToken: string, staff?: boolean, enableDebug?: boolean}) {//baseURL = "https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb10.asmx") {
     this.accessToken = accessToken;
     this.baseURL = staff ? "https://lite.realtime.nationalrail.co.uk/OpenLDBSVWS/ldbsv12.asmx" : "https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb10.asmx";
     this.staff = staff;
+    this.enableDebug = enableDebug;
   }
 
   /**
@@ -33,9 +35,15 @@ class OpenLDBWS implements IOpenLDBWS {
    */
   public getDelayReason(code: string): string{
     if (!code){
+      if (this.enableDebug){
+        console.log("Code not present in getDelayReson");
+      }
       return;
     }
     if (delayCodes[code]){
+      if (this.enableDebug){
+        console.log(`Returning delayCode for ${code}`);
+      }
       return delayCodes[code]
     };
     return;
@@ -47,6 +55,9 @@ class OpenLDBWS implements IOpenLDBWS {
    * @param {LDBWSRequestData} options  - a JSON object derived from LDBWSRequestData
    */
   public async call(method: EOperation | EStaffOperation, options: any) {
+    if (this.enableDebug){
+      console.log(`Calling ${method} with ${JSON.stringify(options)} in .call`);
+    }
     const soapCall = new LDBWSSoap(this.accessToken, method, options).generateCall();
     const SOAPAction = this.staff ? ESOAPStaffAction[method] : ESOAPAction[method];
     // console.log("Method: ", method);
@@ -61,6 +72,9 @@ class OpenLDBWS implements IOpenLDBWS {
       },
       body: soapCall
     };
+    if (this.enableDebug){
+      console.log("Formed request:", reqToSend);
+    }
 
     const body = await request(reqToSend);
     return await this._parseResult(body, method);
@@ -76,6 +90,9 @@ class OpenLDBWS implements IOpenLDBWS {
       }, function (err, result) {
         if (!err) {
           const data = result.Envelope.Body[`${method}Response`];
+          if (this.enableDebug){
+            console.log("Got data in _parseResult: ", data);
+          }
           resolve(data);
         } else {
           reject(err);
